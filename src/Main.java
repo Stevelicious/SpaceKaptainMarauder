@@ -12,7 +12,9 @@ public class Main {
 		do {
 			logic.updateGame();
 			window.updateScreen(space);
-			logic.action();
+			do {
+				logic.action();
+			}while (logic.pause);
 			Thread.sleep(5);
 		}while(!logic.isGameOver());
 		

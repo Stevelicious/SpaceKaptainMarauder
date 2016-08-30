@@ -18,9 +18,9 @@ public class SKMWorld{
 	}
 	
 	public void spawnEnemies(){
-		for (int i = 5; i < 10; i+=2) {
-			for (int j = 10; j < 40; j+=4) {
-				enemies.add(new Enemy(j, i));
+		for (int i = 0; i < 5; i++) {
+			for (int j = 0; j < 10; j++) {
+				enemies.add(new Enemy(j*4+5, i*2+5));
 			}
 		}
 	}

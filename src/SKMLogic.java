@@ -2,6 +2,7 @@ import com.googlecode.lanterna.input.Key;
 
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.Random;
 
 /**
  * Created by Steven Hu on 2016-08-30.
@@ -9,6 +10,8 @@ import java.util.Iterator;
 public class SKMLogic implements GameLogic {
 	private StandardUI ui;
 	private SKMWorld space;
+	public boolean pause = false;
+	private Random rng = new Random();
 	
 	public SKMLogic(StandardUI ui, SKMWorld space) {
 		this.ui = ui;
@@ -59,6 +62,7 @@ public class SKMLogic implements GameLogic {
 			case "Escape \\":
 				System.exit(0);
 			case "NormalKey p":
+				pause = !pause;
 				break;
 		}
 	}
@@ -66,10 +70,13 @@ public class SKMLogic implements GameLogic {
 	public void shoot(Entity entity) {
 		if (entity instanceof Player) {
 			space.playerBullets.add(new Bullet(entity.x, entity.y));
+		}else if (entity instanceof Enemy){
+			space.enemyBullets.add(new Bullet(entity.x, entity.y));
 		}
 	}
 	
 	public void updateGame() {
+//		Move player bullets
 		for (Iterator<Bullet> iterator = space.playerBullets.iterator(); iterator.hasNext(); ) {
 			Bullet bullet = iterator.next();
 			if (bullet.y > 0) {
@@ -79,15 +86,17 @@ public class SKMLogic implements GameLogic {
 			}
 		}
 		
+//		Move enemy bullets
 		for (Iterator<Bullet> iterator = space.enemyBullets.iterator(); iterator.hasNext(); ) {
 			Bullet bullet = iterator.next();
-			if (bullet.y > 0) {
-				bullet.y -= bullet.speed;
+			if (bullet.y < 29) {
+				bullet.y += bullet.speed;
 			} else {
 				iterator.remove();
 			}
 		}
 		
+//		Move enemy
 		int max = Integer.MIN_VALUE;
 		int min = Integer.MAX_VALUE;
 		for (Entity enemy :
@@ -109,6 +118,10 @@ public class SKMLogic implements GameLogic {
 					enemy.y++;
 				}
 			}
+//			Enemy randomly shooting
+			if (rng.nextDouble() >0.99994) {
+				shoot(enemy);
+			}
 		}
 		
 		//Check for collision
@@ -123,6 +136,21 @@ public class SKMLogic implements GameLogic {
 				}
 			}
 		}
+		
+		for (Iterator<Bullet> iterator = space.enemyBullets.iterator(); iterator.hasNext(); ) {
+			Bullet bullet = iterator.next();
+			if (collide(bullet, space.players.get(0))) {
+//				GAMEOVER
+			}
+		}
+		
+		for (Iterator<Enemy> iterator = space.enemies.iterator(); iterator.hasNext(); ) {
+			Enemy enemy = iterator.next();
+			if (collide(enemy, space.players.get(0))) {
+//				GAMEOVER
+			}
+		}
+		
 	}
 	
 }
