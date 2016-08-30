@@ -11,5 +11,8 @@ public class Player extends Entity {
 		speed =1;
 	}
 	
+	public void shoot(){
+		new Bullet(this.x, this.y);
+	}
 	
 }

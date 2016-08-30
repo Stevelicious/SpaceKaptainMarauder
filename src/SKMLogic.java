@@ -1,100 +1,130 @@
 import com.googlecode.lanterna.input.Key;
-import com.googlecode.lanterna.terminal.Terminal;
+
+import java.util.Collections;
+import java.util.Iterator;
 
 /**
  * Created by Steven Hu on 2016-08-30.
  */
-public class SKMLogic implements GameLogic{
+public class SKMLogic implements GameLogic {
+	private StandardUI ui;
+	private SKMWorld space;
+	
+	public SKMLogic(StandardUI ui, SKMWorld space) {
+		this.ui = ui;
+		this.space = space;
+		
+	}
 	
 	public boolean collide(Entity e1, Entity e2) {
-		if (e1.x == e2.x && e1.y == e2.y) {
+		if (e1.getX() == e2.getX() && e1.getY() == e2.getY()) {
 			return true;
 		}
 		return false;
 	}
 	
 	@Override
-	public void readInput() throws InterruptedException {
+	public String readInput() {
 		Key key;
-		Thread.sleep(50);
-		key = terminal.readInput();
+		key = ui.terminal.readInput();
+		if (key != null) {
+			return key.getKind() + " " + key.getCharacter();
+		} else
+			return "";
 	}
 	
 	@Override
 	public boolean isGameOver() {
 		if (space.enemies.isEmpty()) {
-			return false;
+			return true;
 		}
-		return true;
+		return false;
 	}
-
-
-//	private void hitDetect(Player player, Enemy enemies, Terminal terminal) {
-//		if (player.bullets != null) {
-//
-//			for (int i = 0; i < player.bullets.size(); i++) {
-//				player.bullets.get(i).move();
-//
-//				if (player.bullets.get(i).y <= 0) {
-//					player.bullets.remove(i);
-//				} else if (enemies == null) {
-//					break;
-//				} else if (collide(player.bullets.get(i), enemies.g)) {
-//					player.bullets.remove(i);
-//					enemies.remove(0);
-//					break;
-//				} else {
-//					terminal.moveCursor((int) player.bullets.get(i).x, (int) player.bullets.get(i).y);
-//					terminal.putCharacter(player.bullets.get(i).symbol);
-//				}
-//			}
-//
-//		}
-//
-//	public boolean isVictory() {
-//		if (enemies.isEmpty()) {
-//			return false;
-//		}
-//		return true;
-//	}
-//
-//	public void printVictory() {
-//		terminal.clearScreen();
-//		terminal.moveCursor(40, 10);
-//		String gOver = "VICTORY";
-//		for (char c :
-//				gOver.toCharArray()) {
-//			terminal.putCharacter(c);
-//		}
-//	}
-//
-//	public void gameLogic() throws InterruptedException {
-//		Key key;
-//
-//
-//		Thread.sleep(50);
-//		key = terminal.readInput();
-//
-//		if (key != null) {
-//			System.out.println(key.getKind() + " " + key.getCharacter());
-//			switch (key.getKind() + " " + key.getCharacter()) {
-//				case "ArrowLeft L":
-//					player.x--;
-//					break;
-//				case "ArrowRight R":
-//					player.x++;
-//					break;
-//				case "NormalKey  ":
-//					player.shoot();
-//					break;
-//				case "Escape \\":
-//					System.exit(0);
-//				case "NormalKey p":
-//					break;
-//			}
-//
-//		}
-//	}
+	
+	public void action() {
+		switch (readInput()) {
+			case "ArrowLeft L":
+				if (space.players.get(0).x > 0) {
+					space.players.get(0).x--;
+				}
+				break;
+			case "ArrowRight R":
+				if (space.players.get(0).x < 99) {
+					space.players.get(0).x++;
+				}
+				break;
+			case "NormalKey  ":
+				shoot(space.players.get(0));
+				break;
+			case "Escape \\":
+				System.exit(0);
+			case "NormalKey p":
+				break;
+		}
+	}
+	
+	public void shoot(Entity entity) {
+		if (entity instanceof Player) {
+			space.playerBullets.add(new Bullet(entity.x, entity.y));
+		}
+	}
+	
+	public void updateGame() {
+		for (Iterator<Bullet> iterator = space.playerBullets.iterator(); iterator.hasNext(); ) {
+			Bullet bullet = iterator.next();
+			if (bullet.y > 0) {
+				bullet.y -= bullet.speed;
+			} else {
+				iterator.remove();
+			}
+		}
+		
+		for (Iterator<Bullet> iterator = space.enemyBullets.iterator(); iterator.hasNext(); ) {
+			Bullet bullet = iterator.next();
+			if (bullet.y > 0) {
+				bullet.y -= bullet.speed;
+			} else {
+				iterator.remove();
+			}
+		}
+		
+		int max = Integer.MIN_VALUE;
+		int min = Integer.MAX_VALUE;
+		for (Entity enemy :
+				space.enemies) {
+			max = Math.max(max, enemy.getX());
+			min = Math.min(min, enemy.getX());
+		}
+		
+		for (Entity enemy :
+				space.enemies) {
+			if (enemy.y % 2 == 0) {
+				enemy.x -= enemy.speed;
+				if (min < 5){
+					enemy.y++;
+				}
+			} else {
+				enemy.x += enemy.speed;
+				if (max > 95){
+					enemy.y++;
+				}
+			}
+		}
+		
+		//Check for collision
+		
+		for (Iterator<Bullet> iterator = space.playerBullets.iterator(); iterator.hasNext(); ) {
+			Bullet bullet = iterator.next();
+			for (Iterator<Enemy> enemyIterator = space.enemies.iterator(); enemyIterator.hasNext(); ) {
+				Enemy enemy = enemyIterator.next();
+				if (collide(bullet, enemy)) {
+					iterator.remove();
+					enemyIterator.remove();
+				}
+			}
+		}
+	}
+	
 }
 	
 	

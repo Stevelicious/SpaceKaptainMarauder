@@ -3,18 +3,20 @@
  */
 public class Main {
 	public static void main(String[] args) throws InterruptedException {
-		StandardUI window = new StandardUI();
 		SKMWorld space = new SKMWorld();
-		GameLogic logic = new SKMLogic();
+		
+		StandardUI window = new StandardUI();
+		
+		SKMLogic logic = new SKMLogic(window, space);
 		
 		do {
-			
+			logic.updateGame();
 			window.updateScreen(space);
-			
+			logic.action();
 			Thread.sleep(5);
-		}while(logic.isGameOver());
+		}while(!logic.isGameOver());
 		
-//		window.printVictory();
+		window.printGameOver();
 	}
 	
 }

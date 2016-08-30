@@ -6,9 +6,10 @@ import java.nio.charset.Charset;
 /**
  * Created by Steven Hu on 2016-08-30.
  */
-public class StandardUI implements UI {
+public class StandardUI{
 	
-	private Terminal terminal;
+	public Terminal terminal;
+	
 	
 	//Skapa terminal
 	public StandardUI() {
@@ -52,7 +53,7 @@ public class StandardUI implements UI {
 	}
 	
 	public void printGameOver(){
-		
+		System.out.println("GAME OVER");
 	}
 	
 	

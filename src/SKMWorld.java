@@ -13,6 +13,15 @@ public class SKMWorld{
 	
 	public SKMWorld() {
 		players.add(new Player(49,28,'O'));
-		enemies.add(new Enemy(10,10));
+		spawnEnemies();
+//		enemies.add(new Enemy(10,10));
+	}
+	
+	public void spawnEnemies(){
+		for (int i = 5; i < 10; i+=2) {
+			for (int j = 10; j < 40; j+=4) {
+				enemies.add(new Enemy(j, i));
+			}
+		}
 	}
 }

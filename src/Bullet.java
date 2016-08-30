@@ -4,7 +4,7 @@
 public class Bullet extends Entity {
 	public Bullet(double x, double y) {
 		super(x, y, '.');
-		speed = 0.4;
+		speed = 0.1;
 	}
 	
 	
