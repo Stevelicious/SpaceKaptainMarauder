@@ -2,6 +2,10 @@ import com.googlecode.lanterna.TerminalFacade;
 import com.googlecode.lanterna.input.Key;
 import com.googlecode.lanterna.terminal.Terminal;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.nio.charset.Charset;
 
 /**
@@ -50,11 +54,12 @@ public class StandardUI{
 	
 //	Rita ut start menyn
 	public void printMeny() {
-		
+		printToTerminal("lib\\menu.txt");
 	}
 	
 	public void printGameOver(){
-		System.out.println("GAME OVER");
+		
+		printToTerminal("lib\\victory.txt");
 	}
 	
 	public String readInput(){
@@ -63,6 +68,26 @@ public class StandardUI{
 		return key!= null ? (key.getKind() + " " + key.getCharacter()) :"";
 	}
 	
-	
+	public void printToTerminal(String filnamn) {
+		
+		
+		try (BufferedReader br = new BufferedReader(new FileReader(filnamn))) {
+			terminal.clearScreen();
+			String text;
+			int i = 0;
+			while ((text = br.readLine()) != null) {
+				terminal.moveCursor(0,i);
+				for (char c : text.toCharArray()) {
+					terminal.putCharacter(c);
+				}
+				i++;
+				
+			}
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
 	
 }

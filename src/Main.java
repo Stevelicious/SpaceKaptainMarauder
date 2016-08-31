@@ -6,20 +6,30 @@ public class Main {
 		
 		StandardUI window = new StandardUI();
 		SKMWorld space = new SKMWorld(new PlayerLogic(), new EnemyLogic());
-	
+		
+		window.printMeny();
+		boolean inMenu = true;
+		do{
+			switch (window.readInput()){
+				case "NormalKey 1":
+					inMenu = false;
+					break;
+				case "NormalKey 3":
+					System.exit(0);
+			}
+		}while (inMenu);
+		
 		
 		do {
 			window.updateScreen(space);
-			
 			do {
 				space.readInput(window.readInput());
-				Thread.sleep(10);
-			}while (space.playerLogic.pause);
-			
+			}while (space.pause);
 			space.update();
-		}while(!space.isGameover());
-		
-		
+			Thread.sleep(10);
+
+
+		} while (!space.isGameover());
 		
 		
 		window.printGameOver();

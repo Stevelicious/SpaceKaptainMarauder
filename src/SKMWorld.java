@@ -15,11 +15,13 @@ public class SKMWorld {
 	PlayerLogic playerLogic;
 	EnemyLogic enemyLogic;
 	String key;
+	public boolean pause = false;
+	
 	
 	public SKMWorld(PlayerLogic playerLogic, EnemyLogic enemyLogic) {
 		this.playerLogic = playerLogic;
 		this.enemyLogic = enemyLogic;
-		players.add(new Player(49, 28, 'O'));
+		players.add(new Player(49, 28, '▲'));
 		spawnEnemies();
 //		enemies.add(new Enemy(10,10));
 		
@@ -35,6 +37,9 @@ public class SKMWorld {
 	
 	public void readInput(String key) {
 		this.key = key;
+		if (key.equals("NormalKey p")){
+			pause = !pause;
+		}
 	}
 	
 	public void update() {

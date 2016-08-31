@@ -6,12 +6,11 @@ import java.util.List;
  */
 public class PlayerLogic implements GameLogic {
 
-	public boolean pause = false;
+	
 
 	public void run(String key,List<Entity> players, List<Entity> bullets){
 		
 		action(key, players, bullets);
-		
 		update(bullets);
 		
 	}
@@ -59,9 +58,7 @@ public class PlayerLogic implements GameLogic {
 				break;
 			case "Escape \\":
 				System.exit(0);
-			case "NormalKey p":
-				pause = !pause;
-				break;
+			
 		}
 	}
 }
