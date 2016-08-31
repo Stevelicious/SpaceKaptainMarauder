@@ -20,4 +20,10 @@ public abstract class Entity {
 		return (int)y;
 	}
 	
+	public boolean collide(Entity other){
+		if (this.getX() == other.getX() && this.getY() == other.getY()) {
+			return true;
+		}
+		return false;
+	}
 }

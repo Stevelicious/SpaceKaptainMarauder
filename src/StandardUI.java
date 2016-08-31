@@ -1,4 +1,5 @@
 import com.googlecode.lanterna.TerminalFacade;
+import com.googlecode.lanterna.input.Key;
 import com.googlecode.lanterna.terminal.Terminal;
 
 import java.nio.charset.Charset;
@@ -10,7 +11,6 @@ public class StandardUI{
 	
 	public Terminal terminal;
 	
-	
 	//Skapa terminal
 	public StandardUI() {
 		this.terminal = TerminalFacade.createTerminal(System.in, System.out, Charset.forName("UTF8"));
@@ -18,8 +18,8 @@ public class StandardUI{
 		terminal.setCursorVisible(false);
 		
 	}
-	//Uppdatera skärmen
 	
+	//Uppdatera skärmen
 	public void updateScreen(SKMWorld space) {
 		terminal.clearScreen();
 		for (Entity player :
@@ -48,6 +48,7 @@ public class StandardUI{
 		terminal.putCharacter(entity.symbol);
 	}
 	
+//	Rita ut start menyn
 	public void printMeny() {
 		
 	}
@@ -56,7 +57,11 @@ public class StandardUI{
 		System.out.println("GAME OVER");
 	}
 	
-	
+	public String readInput(){
+		Key key;
+		key = terminal.readInput();
+		return key!= null ? (key.getKind() + " " + key.getCharacter()) :"";
+	}
 	
 	
 	

@@ -1,6 +1,3 @@
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by Steven Hu on 2016-08-30.
  */
@@ -11,8 +8,5 @@ public class Player extends Entity {
 		speed =1;
 	}
 	
-	public void shoot(){
-		new Bullet(this.x, this.y);
-	}
 	
 }
